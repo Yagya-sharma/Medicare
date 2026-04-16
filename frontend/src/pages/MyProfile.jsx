@@ -1,23 +1,30 @@
 import React, { useState } from 'react'
+import { useContext } from 'react'
+import { AppContext } from '../context/AppContext'
 import { assets } from '../assets/assets'
 
 const MyProfile = () => {
-  const [userData, setUserData] = useState({
-    name: "Harry yoward",
-    image: assets.profile_pic,
-    email: 'harry@gmail.com',
-    phone: '+1 123 456 7890',
-    address: {
-      line1: "57th Cross, Richmond ",
-      line2: "Circle, Church Road, London"
-    },
-    gender: 'Male',
-    dob: '2000-01-20'
-  })
+  const {userData,setUserData,backendUrl,token,loadUserProfileData}=useContext(AppContext)
   const [isEdit, setIsEdit] = useState(false)
-  return (
+  const [image,setImage]=useState(false)
+
+  const updateUserProfileData=async()=>{
+
+  }
+  return userData && (
     <div className='max-w-lg flex flex-col gap-2 text-sm'>
-      <img className='w-36 rounded' src={userData.image} />
+      {
+        isEdit
+        ?<label htmlFor='image'>
+          <div className='inline-bloack'>
+            <img src={image ? URL.createObjectURL(image):userData.image}/>
+            <img src={image ? '':assets.upload_icon}/>
+          </div>
+          <input onChange={(e)=>setImage(e.target.files[0])} type="file" id="image" hidden/>
+        </label>
+        :<img className='w-36 rounded' src={userData.image} />
+      }
+      
       {
         isEdit
           ? <input className='bg-gray-50 text-3xl font-medium max-w-60 mt-4' type="text" value={userData.name} onChange={e => setUserData(prev => ({ ...prev, name: e.target.value }))} />
