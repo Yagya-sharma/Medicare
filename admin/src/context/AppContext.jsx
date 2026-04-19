@@ -1,51 +1,61 @@
 import { createContext } from "react";
 
-export const AppContext=createContext()
+export const AppContext = createContext()
 
-const AppContextProvider=(props)=>{
-    // const calculateAge=(dob)=>{
-    //     const today=new Date()
-    //     const birthDate=new Date(dob)
-    //     let age=today.getFullYear()-birthDate.getFullYear()
-    //     return age
-    // }
-    const calculateAge = (dob) => {
-  if (!dob) return 'N/A'
+const AppContextProvider = (props) => {
+  // const calculateAge=(dob)=>{
+  //     const today=new Date()
+  //     const birthDate=new Date(dob)
+  //     let age=today.getFullYear()-birthDate.getFullYear()
+  //     return age
+  // }
 
-  // convert "12_04_2002" → "2002-04-12"
-  const parts = dob.split('_')
-  if (parts.length !== 3) return 'N/A'
+  const currency="$"
+  const calculateAge = (dob) => {
+    if (!dob) return 'N/A'
 
-  const formattedDOB = `${parts[2]}-${parts[1]}-${parts[0]}`
+    // convert "12_04_2002" → "2002-04-12"
+    const parts = dob.split('_')
+    if (parts.length !== 3) return 'N/A'
 
-  const birthDate = new Date(formattedDOB)
-  if (isNaN(birthDate)) return 'N/A'
+    const formattedDOB = `${parts[2]}-${parts[1]}-${parts[0]}`
 
-  const today = new Date()
+    const birthDate = new Date(formattedDOB)
+    if (isNaN(birthDate)) return 'N/A'
 
-  let age = today.getFullYear() - birthDate.getFullYear()
-  const monthDiff = today.getMonth() - birthDate.getMonth()
+    const today = new Date()
 
-  if (
-    monthDiff < 0 ||
-    (monthDiff === 0 && today.getDate() < birthDate.getDate())
-  ) {
-    age--
+    let age = today.getFullYear() - birthDate.getFullYear()
+    const monthDiff = today.getMonth() - birthDate.getMonth()
+
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--
+    }
+
+    return age
   }
 
-  return age
-}
+
+  const months = ["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+  const slotDateFormat = (slotDate) => {
+    const dateArray = slotDate.split("_")
+    return dateArray[0] + " " + months[Number(dateArray[1])] + " " + dateArray[2]
+  }
 
 
 
-    const value={
-        calculateAge
-    }
-    return (
-        <AppContext.Provider value={value}>
-            {props.children}
-        </AppContext.Provider>
-    )
+  const value = {
+    calculateAge,slotDateFormat,
+    currency
+  }
+  return (
+    <AppContext.Provider value={value}>
+      {props.children}
+    </AppContext.Provider>
+  )
 }
 
 export default AppContextProvider
